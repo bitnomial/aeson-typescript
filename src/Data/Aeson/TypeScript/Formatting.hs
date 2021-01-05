@@ -28,7 +28,7 @@ formatTSDeclarations' :: FormattingOptions -> [TSDeclaration] -> String
 formatTSDeclarations' options declarations = T.unpack $ T.intercalate "\n\n" (fmap (T.pack . formatTSDeclaration options) declarations)
 
 formatTSField :: TSField -> String
-formatTSField (TSField optional name typ) = [i|#{name}#{if optional then "?" else ""}: #{typ}|]
+formatTSField (TSField optional name typ) = [i|#{name}: #{typ}#{if optional then "| null" else ""}|]
 
 getGenericBrackets :: [String] -> String
 getGenericBrackets [] = ""
