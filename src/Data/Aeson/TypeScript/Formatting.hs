@@ -1,4 +1,4 @@
-{-# LANGUAGE QuasiQuotes, OverloadedStrings, TemplateHaskell, RecordWildCards, ScopedTypeVariables, NamedFieldPuns, CPP #-}
+{-# LANGUAGE QuasiQuotes, OverloadedStrings, RecordWildCards, ScopedTypeVariables, NamedFieldPuns, CPP #-}
 
 module Data.Aeson.TypeScript.Formatting where
 
@@ -60,7 +60,7 @@ validateFormattingOptions options@FormattingOptions{..} decls
     isPlainSumType ds = (not . any isInterface $ ds) && length ds == 1
 
 formatTSField :: TSField -> String
-formatTSField (TSField optional name typ) = [i|#{name}#{if optional then ("?" :: String) else ""}: #{typ}|]
+formatTSField (TSField optional name typ) = [i|#{name}: #{typ}#{if optional then "| null" :: String else ""}|]
 
 getGenericBrackets :: [String] -> String
 getGenericBrackets [] = ""

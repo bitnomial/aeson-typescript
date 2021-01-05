@@ -20,7 +20,7 @@ import Data.Proxy
 import Test.Hspec
 import TestBoilerplate
 
-$(testDeclarations "OmitNothingFields" (A.defaultOptions {omitNothingFields=True}))
+$(testDeclarations "OmitNothingFields" (A.defaultOptions {omitNothingFields=False}))
 
 main :: IO ()
 main = hspec $ describe "OmitNothingFields" $ do
@@ -31,9 +31,9 @@ main = hspec $ describe "OmitNothingFields" $ do
                          interfaceName = "Optional"
                          , interfaceGenericVariables = []
                          , interfaceMembers = [
-                             TSField {fieldOptional = True
+                             TSField {fieldOptional = False
                                      , fieldName = "optionalInt"
-                                     , fieldType = "number"}
+                                     , fieldType = "number | null"}
                              ]
                          }]
 
