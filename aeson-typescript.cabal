@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e1e74b37dded848299e515c32291f9f35f71998ce4f89f9a5622d634b197109d
+-- hash: e778945cc6c2317863114819314907c928f41e6d6f6a7ccdb77b712d1dd356bf
 
 name:           aeson-typescript
 version:        0.3.0.0
@@ -52,7 +52,7 @@ library
     , mtl
     , template-haskell
     , text
-    , th-abstraction <0.4
+    , th-abstraction <0.5
     , unordered-containers
   default-language: Haskell2010
 
@@ -99,6 +99,6 @@ test-suite aeson-typescript-test
     , template-haskell
     , temporary
     , text
-    , th-abstraction <0.4
+    , th-abstraction <0.5
     , unordered-containers
   default-language: Haskell2010
