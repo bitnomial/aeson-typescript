@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e778945cc6c2317863114819314907c928f41e6d6f6a7ccdb77b712d1dd356bf
+-- hash: 6430e3f8a822dfc320954ca7eaad4f2e9706e1bc8f0ab50761e56b5eb0fdb2f7
 
 name:           aeson-typescript
 version:        0.3.0.0
@@ -18,7 +18,8 @@ maintainer:     tom@codedown.io
 copyright:      2018 CodeDown
 license:        BSD3
 license-file:   LICENSE
-tested-with:    GHC == 7.6.3, GHC == 7.8.4, GHC == 7.10.2
+tested-with:
+    GHC == 7.6.3, GHC == 7.8.4, GHC == 7.10.2
 build-type:     Simple
 extra-source-files:
     README.md
@@ -46,7 +47,7 @@ library
       src
   build-depends:
       aeson
-    , base >=4.7 && <5
+    , base >=4.9 && <5
     , containers
     , interpolate
     , mtl
@@ -87,7 +88,7 @@ test-suite aeson-typescript-test
   build-depends:
       aeson
     , aeson-typescript
-    , base >=4.7 && <5
+    , base >=4.9 && <5
     , bytestring
     , containers
     , directory

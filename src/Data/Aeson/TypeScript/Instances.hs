@@ -10,6 +10,7 @@ import Data.Aeson.TypeScript.Types
 import Data.Data
 import Data.HashMap.Strict
 import qualified Data.List as L
+import Data.List.NonEmpty (NonEmpty)
 import Data.Monoid
 import Data.Set
 import Data.String.Interpolate.IsString
@@ -49,6 +50,10 @@ instance TypeScript Char where
   getTypeScriptType _ = "string"
 
 instance {-# OVERLAPPABLE #-} (TypeScript a) => TypeScript [a] where
+  getTypeScriptType _ = (getTypeScriptType (Proxy :: Proxy a)) ++ "[]"
+  getParentTypes _ = (TSType (Proxy :: Proxy a)) : (getParentTypes (Proxy :: Proxy a))
+
+instance {-# OVERLAPPABLE #-} (TypeScript a) => TypeScript (NonEmpty a) where
   getTypeScriptType _ = (getTypeScriptType (Proxy :: Proxy a)) ++ "[]"
   getParentTypes _ = (TSType (Proxy :: Proxy a)) : (getParentTypes (Proxy :: Proxy a))
 
