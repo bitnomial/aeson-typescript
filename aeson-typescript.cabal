@@ -3,9 +3,11 @@ cabal-version: 1.12
 -- This file has been generated from package.yaml by hpack version 0.36.0.
 --
 -- see: https://github.com/sol/hpack
+--
+-- hash: e778945cc6c2317863114819314907c928f41e6d6f6a7ccdb77b712d1dd356bf
 
 name:           aeson-typescript
-version:        0.6.2.0
+version:        0.7.0.0
 synopsis:       Generate TypeScript definition files from your ADTs
 description:    Please see the README on Github at <https://github.com/codedownio/aeson-typescript#readme>
 category:       Text, Web, JSON
