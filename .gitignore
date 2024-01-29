@@ -1,4 +1,5 @@
 .stack-work/
 *~
-.dir-locals.el
 dist-newstyle
+*.hie
+dev/

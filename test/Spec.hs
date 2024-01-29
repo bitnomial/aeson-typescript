@@ -1,9 +1,18 @@
+{-# LANGUAGE CPP #-}
 
 module Main where
 
 import Test.Hspec
 
+import qualified Basic
+import qualified ClosedTypeFamilies
+import qualified Formatting
+import qualified Generic
+import qualified GetDoc
 import qualified HigherKind
+
+import qualified LegalNameSpec
+import qualified NoOmitNothingFields
 import qualified ObjectWithSingleFieldNoTagSingleConstructors
 import qualified ObjectWithSingleFieldTagSingleConstructors
 import qualified TaggedObjectNoTagSingleConstructors
@@ -12,18 +21,26 @@ import qualified TwoElemArrayNoTagSingleConstructors
 import qualified TwoElemArrayTagSingleConstructors
 import qualified UntaggedNoTagSingleConstructors
 import qualified UntaggedTagSingleConstructors
-import qualified OmitNothingFields
-import qualified NoOmitNothingFields
+import qualified UnwrapUnaryRecords
 
-main = hspec $ do
-  ObjectWithSingleFieldTagSingleConstructors.tests
-  ObjectWithSingleFieldNoTagSingleConstructors.tests
-  TaggedObjectTagSingleConstructors.tests
-  TaggedObjectNoTagSingleConstructors.tests
-  TwoElemArrayTagSingleConstructors.tests
-  TwoElemArrayNoTagSingleConstructors.tests
-  UntaggedTagSingleConstructors.tests
-  UntaggedNoTagSingleConstructors.tests
-  HigherKind.tests
-  OmitNothingFields.tests
-  NoOmitNothingFields.tests
+main :: IO ()
+main = hspec $ parallel $ do
+    Basic.tests
+    ClosedTypeFamilies.tests
+    Formatting.tests
+    Generic.tests
+    HigherKind.tests
+    LegalNameSpec.tests
+    NoOmitNothingFields.allTests
+    ObjectWithSingleFieldNoTagSingleConstructors.tests
+    ObjectWithSingleFieldTagSingleConstructors.tests
+    TaggedObjectNoTagSingleConstructors.tests
+    TaggedObjectTagSingleConstructors.tests
+    TwoElemArrayNoTagSingleConstructors.tests
+    TwoElemArrayTagSingleConstructors.tests
+    UntaggedNoTagSingleConstructors.tests
+    UntaggedTagSingleConstructors.tests
+    UnwrapUnaryRecords.allTests
+#if MIN_VERSION_template_haskell(2,18,0)
+    GetDoc.tests
+#endif

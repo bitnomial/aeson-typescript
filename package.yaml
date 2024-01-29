@@ -1,15 +1,15 @@
 name:                aeson-typescript
-version:             0.3.0.0
+version:             0.7.0.0
 github:              "codedownio/aeson-typescript"
 license:             BSD3
 category:            Text, Web, JSON
 author:              "Tom McLaughlin"
 maintainer:          "tom@codedown.io"
-copyright:           "2018 CodeDown"
+copyright:           "2022 CodeDown"
 
 extra-source-files:
 - README.md
-- ChangeLog.md
+- CHANGELOG.md
 - test/assets/package.json
 - test/assets/npm_install.sh
 - test/assets/yarn_install.sh
@@ -23,28 +23,49 @@ synopsis:            Generate TypeScript definition files from your ADTs
 # common to point users to the README.md file.
 description:         Please see the README on Github at <https://github.com/codedownio/aeson-typescript#readme>
 
-tested-with: GHC == 7.6.3, GHC == 7.8.4, GHC == 7.10.2
+tested-with:
+- GHC == 9.6.1
+- GHC == 9.4.4
+- GHC == 9.2.7
+- GHC == 9.0.2
+- GHC == 8.10.7
+- GHC == 8.8.4
+- GHC == 8.6.5
 
 dependencies:
 - aeson
 - base >= 4.7 && < 5
+- bytestring
 - containers
-- interpolate
 - mtl
+- string-interpolate
 - template-haskell
 - text
-- th-abstraction < 0.5
+- th-abstraction
+- transformers
 - unordered-containers
+
+default-extensions:
+- LambdaCase
+- MultiWayIf
+- NamedFieldPuns
+- OverloadedStrings
+- QuasiQuotes
+- RecordWildCards
+- ScopedTypeVariables
+- TupleSections
+- ViewPatterns
 
 library:
   source-dirs: src
   exposed-modules:
-    - Data.Aeson.TypeScript.TH
-    - Data.Aeson.TypeScript.LookupTypes
-    - Data.Aeson.TypeScript.Recursive
+  - Data.Aeson.TypeScript.TH
+  - Data.Aeson.TypeScript.Internal
+  - Data.Aeson.TypeScript.Recursive
+  - Data.Aeson.TypeScript.LegalName
 
 tests:
-  aeson-typescript-test:
+  aeson-typescript-tests:
     main:                Spec.hs
     source-dirs:
     - test
@@ -54,6 +75,14 @@ tests:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -haddock
+    - -fno-warn-unused-top-binds
+    - -fno-warn-orphans
+    default-extensions:
+    - FlexibleContexts
+    - KindSignatures
+    - TemplateHaskell
+    - TypeFamilies
     dependencies:
     - aeson-typescript
     - bytestring

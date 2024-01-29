@@ -1,9 +1,8 @@
-{-# LANGUAGE CPP, QuasiQuotes, OverloadedStrings, TemplateHaskell, RecordWildCards, ScopedTypeVariables, NamedFieldPuns, KindSignatures #-}
+{-# LANGUAGE CPP #-}
 
-module UntaggedTagSingleConstructors (tests) where
+module UntaggedTagSingleConstructors (main, tests) where
 
 import Data.Aeson as A
-import Data.Aeson.TH as A
 import Test.Hspec
 import TestBoilerplate
 import Util
@@ -13,7 +12,9 @@ import Util
 #if MIN_VERSION_aeson(1,0,0)
 $(testDeclarations "UntaggedTagSingleConstructors" (setTagSingleConstructors $ A.defaultOptions {sumEncoding=UntaggedValue}))
 #else
+tests :: SpecWith ()
 tests = describe "UntaggedTagSingleConstructors" $ it "tests are disabled for this Aeson version" $ 2 `shouldBe` 2
 #endif
 
+main :: IO ()
 main = hspec tests

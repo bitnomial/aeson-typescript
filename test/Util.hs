@@ -1,22 +1,23 @@
-{-# LANGUAGE CPP, QuasiQuotes, OverloadedStrings, TemplateHaskell, RecordWildCards, ScopedTypeVariables, NamedFieldPuns #-}
+{-# LANGUAGE CPP #-}
 
 module Util where
 
 import Control.Monad
 import Data.Aeson as A
-import Data.Aeson.TH as A
 import Data.Aeson.TypeScript.TH
 import qualified Data.ByteString.Lazy as B
 import Data.Proxy
-import Data.String.Interpolate.IsString
+import Data.String.Interpolate
 import qualified Data.Text as T
 import System.Directory
 import System.Environment
 import System.Exit
 import System.FilePath
 import System.IO.Temp
-import System.Process
+import System.Process hiding (cwd)
 
+
+npmInstallScript, yarnInstallScript, localTSC :: String
 npmInstallScript = "test/assets/npm_install.sh"
 yarnInstallScript = "test/assets/yarn_install.sh"
 localTSC = "test/assets/node_modules/.bin/tsc"
@@ -25,14 +26,12 @@ isCI :: IO Bool
 isCI = lookupEnv "CI" >>= (return . (== (Just "true")))
 
 getTSC :: IO FilePath
-getTSC = do
-  isCI <- isCI
-  case isCI of
-    True -> do
-      return "tsc" -- Assume it's set up on the path
-    False -> do
-      ensureTSCExists
-      return localTSC
+getTSC = isCI >>= \case
+  True -> do
+    return "tsc" -- Assume it's set up on the path
+  False -> do
+    ensureTSCExists
+    return localTSC
 
 testTypeCheck :: forall a. (TypeScript a, ToJSON a) => a -> IO ()
 testTypeCheck obj = withSystemTempDirectory "typescript_test" $ \folder -> do
@@ -46,19 +45,20 @@ let x: #{tsType} = #{A.encode obj};
 
   -- "--diagnostics", "--listFiles"
   tsc <- getTSC
-  readProcess tsc ["--noEmit", "--skipLibCheck", "--traceResolution", "--noResolve", tsFile] ""
+  void $ readProcess tsc ["--noEmit", "--skipLibCheck", "--traceResolution", "--noResolve", tsFile] ""
 
   return ()
   where tsDeclarations :: [TSDeclaration] = getTypeScriptDeclarations (Proxy :: Proxy a)
         tsType :: String = getTypeScriptType (Proxy :: Proxy a)
 
 
+getTSFile :: [TSDeclaration] -> [(String, B.ByteString)] -> String
 getTSFile tsDeclarations typesAndVals = [i|
 #{formatTSDeclarations tsDeclarations}
 
 #{T.unlines typeLines}
 |]
-  where typeLines = [[i|let x#{index}: #{typ} = #{val};|] | (index, (typ, val)) <- zip [1..] typesAndVals]
+  where typeLines = [[i|let x#{index}: #{typ} = #{val};|] | (index, (typ, val)) <- zip [(1 :: Int)..] typesAndVals]
 
 
 testTypeCheckDeclarations :: [TSDeclaration] -> [(String, B.ByteString)] -> IO ()
@@ -70,12 +70,19 @@ testTypeCheckDeclarations tsDeclarations typesAndVals = withSystemTempDirectory 
   writeFile tsFile contents
 
   tsc <- getTSC
-  (code, output, err) <- readProcessWithExitCode tsc ["--strict", "--noEmit", "--skipLibCheck", "--traceResolution", "--noResolve", tsFile] ""
+  (code, sout, serr) <- readProcessWithExitCode tsc ["--strict", "--noEmit", "--skipLibCheck", "--traceResolution", "--noResolve", tsFile] ""
 
-  when (code /= ExitSuccess) $ do
-    error [i|TSC check failed: #{output}. File contents were\n\n#{contents}|]
+  when (code /= ExitSuccess) $
+    error [__i|TSC check failed.
+               File contents:
+               #{contents}
 
-  return ()
+               Stdout:
+               #{sout}
+
+               Stderr:
+               #{serr}
+              |]
 
 
 ensureTSCExists :: IO ()

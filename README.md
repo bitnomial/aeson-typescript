@@ -1,5 +1,5 @@
 
-# Welcome to `aeson-typescript` [![Hackage](https://img.shields.io/hackage/v/aeson-typescript.svg)](https://hackage.haskell.org/package/aeson-typescript) [![Build Status](https://travis-ci.org/codedownio/aeson-typescript.svg)](https://travis-ci.org/codedownio/aeson-typescript)
+# Welcome to `aeson-typescript` [![Hackage](https://img.shields.io/hackage/v/aeson-typescript.svg)](https://hackage.haskell.org/package/aeson-typescript) ![aeson-typescript](https://github.com/codedownio/aeson-typescript/workflows/aeson-typescript/badge.svg)
 
 This library provides a way to generate TypeScript `.d.ts` files that match your existing Aeson `ToJSON` instances.
 If you already use Aeson's Template Haskell support to derive your instances, then deriving TypeScript is as simple as
@@ -16,6 +16,7 @@ data D a = Nullary
          | Product String Char a
          | Record { testOne   :: Double
                   , testTwo   :: Bool
+                  -- | This docstring will go into the generated TypeScript!
                   , testThree :: D a
                   } deriving Eq
 ```
@@ -29,7 +30,7 @@ $(deriveTypeScript (defaultOptions {fieldLabelModifier = drop 4, constructorTagM
 Now we can use the newly created instances.
 
 ```haskell
->>> putStrLn $ formatTSDeclarations $ getTypeScriptDeclaration (Proxy :: Proxy D)
+>>> putStrLn $ formatTSDeclarations $ getTypeScriptDeclarations (Proxy :: Proxy (D T))
 
 type D<T> = "nullary" | IUnary<T> | IProduct<T> | IRecord<T>;
 
@@ -41,6 +42,7 @@ interface IRecord<T> {
   tag: "record";
   One: number;
   Two: boolean;
+  // This docstring will go into the generated TypeScript!
   Three: D<T>;
 }
 ```
@@ -112,6 +114,6 @@ Now you can generate the types by running `stack runhaskell tsdef/Main.hs > type
 
 # See also
 
-If you want a much more opinionated web framework for generating APIs, check out [servant](http://haskell-servant.readthedocs.io/en/stable/). (Although it doesn't seem to support TypeScript client generation at the moment.)
+If you want a more opinionated web framework for generating APIs, check out [servant](http://haskell-servant.readthedocs.io/en/stable/). If you use Servant, you may enjoy [servant-typescript](https://github.com/codedownio/servant-typescript), which is based on `aeson-typescript`! This companion package also has the advantage of magically collecting all the types used in your API, so you don't have to list them out manually.
 
 For another very powerful framework that can generate TypeScript client code based on an API specification, see [Swagger/OpenAPI](https://github.com/swagger-api/swagger-codegen).
