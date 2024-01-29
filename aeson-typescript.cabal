@@ -94,7 +94,6 @@ test-suite aeson-typescript-tests
       NoOmitNothingFields
       ObjectWithSingleFieldNoTagSingleConstructors
       ObjectWithSingleFieldTagSingleConstructors
-      OmitNothingFields
       OpenTypeFamilies
       TaggedObjectNoTagSingleConstructors
       TaggedObjectTagSingleConstructors
